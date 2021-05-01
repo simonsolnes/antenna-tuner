@@ -1,4 +1,18 @@
+https://pypi.org/project/hid/
+
+
+
 USBRelay8@14500000  <class AppleUSBDevice, id 0x1000b57bb, registered, matched, active, busy 0 (1 ms), retain 12>
+
+Product ID: 0x05df
+Vendor ID: 0x16c0
+Version: 1.00
+Speed: Up to 1.5 Mb/s
+Manufacturer: www.dcttech.com
+Location ID: 0x14500000 / 37
+Current Available (mA): 500
+Current Required (mA): 20
+Extra Operating Current (mA): 0
 
 "sessionID" = 612302617576444
 "idProduct" = 1503
