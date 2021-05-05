@@ -10,8 +10,10 @@ constants = {
     'user_labels_path': 'user_labels.json'
 }
 
+# TODO: same button width
+
 root = tk.Tk()
-root.title("Papa")
+root.title("Relay Array")
 
 relays = RelayArray()
 
@@ -120,12 +122,13 @@ def configure_labels():
 
 
 
-tk.Button(root, text="Configure Labels", command=configure_labels).pack(pady=10)
 
 relay_table = tk.Frame(root, padx=20, pady=20)
 relay_table.pack()
 
-tk.Label(relay_table, text='Rel').grid(row=0, column=0, padx=4, pady=4)
+tk.Button(root, text="Configure Labels", command=configure_labels).pack(pady=10)
+
+tk.Label(relay_table, text='Relay').grid(row=0, column=0, padx=4, pady=4)
 tk.Label(relay_table, text='NC').grid(row=0, column=4, padx=4, pady=4)
 tk.Label(relay_table, text='NO').grid(row=0, column=5, padx=4, pady=4)
 
