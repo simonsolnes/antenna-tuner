@@ -1,3 +1,4 @@
+#!C:/Users/Sander/AppData/Local/Microsoft/WindowsApps/PythonSoftwareFoundation.Python.3.9_qbz5n2kfra8p0/python.exe
 import tkinter as tk
 from tkinter import StringVar, messagebox
 from tkinter.constants import W
@@ -7,7 +8,7 @@ import json
 def from_rgb(rgb):
     return "#%02x%02x%02x" % rgb
 constants = {
-    'user_labels_path': 'user_labels.json',
+    'user_labels_path': '/Users/Sander/Documents/Simon/antenna-tuner/user_labels.json',
     'bg_color': from_rgb((200, 80, 80)),
 }
 
