@@ -1,13 +1,14 @@
 import tkinter as tk
 from tkinter import StringVar, messagebox
 from tkinter.constants import W
-from relay_array import RelayArray, NO, NC, DeviceNotConnected
-on_indicator = '🟢'
-off_indicator = '🔴'
+from relay_board import RelayArray, NO, NC, DeviceNotConnected
 import json
 
+def from_rgb(rgb):
+    return "#%02x%02x%02x" % rgb
 constants = {
-    'user_labels_path': 'user_labels.json'
+    'user_labels_path': 'user_labels.json',
+    'bg_color': from_rgb((200, 80, 80)),
 }
 
 # TODO: same button width
@@ -29,24 +30,21 @@ def make_user_connect():
 make_user_connect()
 
 
-indicators = []
 labels = []
 nc_buttons = []
 no_buttons = []
 
-def from_rgb(rgb):
-    return "#%02x%02x%02x" % rgb
+
 
 def update_status():
     make_user_connect()
-    for indicator, state, nc_button, no_button in zip(indicators, relays.status, nc_buttons, no_buttons):
-        indicator.config(text=on_indicator if state else off_indicator)
+    for state, nc_button, no_button in zip(relays.status, nc_buttons, no_buttons):
         if state:
-            nc_button.config(fg='white')
-            no_button.config(fg='blue')
+            nc_button.config(bg=constants['button_color'])
+            no_button.config(bg=constants['bg_color'])
         else:
-            nc_button.config(fg='blue')
-            no_button.config(fg='white')
+            nc_button.config(bg=constants['bg_color'])
+            no_button.config(bg=constants['button_color'])
 
 def read_user_labels():
     with open(constants['user_labels_path'], 'r') as f:
@@ -123,41 +121,39 @@ def configure_labels():
 
 
 
-relay_table = tk.Frame(root, padx=20, pady=20)
+relay_table = tk.Frame(root, padx=10, pady=10)
 relay_table.pack()
 
-tk.Button(root, text="Configure Labels", command=configure_labels).pack(pady=10)
 
 tk.Label(relay_table, text='Relay').grid(row=0, column=0, padx=4, pady=4)
-tk.Label(relay_table, text='NC').grid(row=0, column=4, padx=4, pady=4)
-tk.Label(relay_table, text='NO').grid(row=0, column=5, padx=4, pady=4)
+configure_labels_button = tk.Button(relay_table, text="Configure Labels", command=configure_labels)
+configure_labels_button.grid(row=0, column=1)
+tk.Label(relay_table, text='NC').grid(row=0, column=3, padx=4, pady=4)
+tk.Label(relay_table, text='NO').grid(row=0, column=4, padx=4, pady=4)
+
+constants['button_color'] = configure_labels_button.cget("background")
 
 for relay_num, row in zip(range(1, 9), range(1, 9)):
     # 0 Relay title
     tk.Label(relay_table, text=str(relay_num)).grid(row=row, column=0, padx=4, pady=4)
 
-    # 1 Indicator
-    indicator = tk.Label(relay_table, text='')
-    indicators.append(indicator)
-    indicator.grid(row=row, column=1, padx=4, pady=4)
-
-    # 2 Label
+    # 1 Label
     label = tk.Label(relay_table, text='User Label')
     labels.append(label)
-    label.grid(row=row, column=2, padx=4, pady=4, sticky='w')
+    label.grid(row=row, column=1, padx=4, pady=4, sticky='w')
 
-    # 3 Toggle
-    tk.Button(relay_table, text="Toggle", command=create_toggle(relay_num)).grid(row=row, column=3, padx=4, pady=4)
+    # 2 Toggle
+    tk.Button(relay_table, text="Toggle", command=create_toggle(relay_num)).grid(row=row, column=2, padx=4, pady=4)
 
-    # 4 NC
+    # 3 NC
     nc_button = tk.Button(relay_table, command=create_setter(relay_num, NC))
     nc_buttons.append(nc_button)
-    nc_button.grid(row=row, column=4, padx=4, pady=4)
+    nc_button.grid(row=row, column=3, padx=4, pady=4)
 
-    # 5 NO
+    # 4 NO
     no_button = tk.Button(relay_table, command=create_setter(relay_num, NO))
     no_buttons.append(no_button)
-    no_button.grid(row=row, column=5, padx=4, pady=4)
+    no_button.grid(row=row, column=4, padx=4, pady=4)
 
 
 
@@ -174,6 +170,8 @@ x = screen_width/2 - 500
 y = screen_height/4 - win_size[1]/2
 
 root.geometry("+%d+%d" % (x, y))
+
+print('setup done')
 
 root.mainloop()
 

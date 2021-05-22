@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
-import hid
+from sys import platform
+if platform == 'win32':
+    import pywinusb.hid as winhid
+elif platform == 'darwin':
+    import hid
+else:
+    raise NotImplemented
 from time import sleep
-
 class DeviceNotConnected(Exception):
     pass
 
@@ -25,8 +30,23 @@ class RelayArray:
         self.vid = vid
         self.pid = pid
         self.verbose = verbose
-
+    
     def connect(self):
+        if platform == 'win32':
+            self.connect_win()
+        elif platform == 'darwin':
+            self.connect_darwin()
+        else:
+            raise NotImplemented
+        
+    def connect_win(self):
+        print('connecting')
+        self.wh = winhid.HidDeviceFilter(vendor_id = self.vid).get_devices()[0]
+        self.wh.open()
+        print(type(self.wh))
+        print('connected to', self.wh)
+
+    def connect_darwin(self):
         try:
             self.h = hid.Device(self.vid, self.pid)
         except hid.HIDException as e:
@@ -36,11 +56,16 @@ class RelayArray:
                 raise e
 
     def close(self):
-        self.h.close()
+        if platform == 'win32':
+            raise NotImplemented
+        elif platform == 'darwin':
+            self.h.close()
 
     @property
     def is_connected(self):
-        if not hasattr(self, 'h'):
+        if platform == 'darwin' and not hasattr(self, 'h'):
+            return False
+        elif platform == 'win32' and not hasattr(self, 'wh'):
             return False
         try:
             self.status
@@ -54,23 +79,60 @@ class RelayArray:
 
     @property
     def status(self):
+        if platform == 'darwin':
+            return self.status_darwin()
+        elif platform == 'win32':
+            return self.status_win()
+        else:
+            raise NotImplemented
+    def transpose_status(self, rawr):
+        return [bool(int(x)) for x in list('{0:08b}'.format(rawr))][::-1]
+
+    def status_win(self):
+        report = self.wh.find_feature_reports()[0]
+        r = report.get()
+        print('status report:', r)
+        return self.transpose_status(report.get_raw_data()[7])
+
+        
+
+    def status_darwin(self):
         try:
             switch_statuses = self.h.get_feature_report(1, 8)[7]
         except hid.HIDException:
             raise DeviceNotConnected()
-        return [bool(int(x)) for x in list('{0:08b}'.format(switch_statuses))][::-1]
+        return self.transpose_status(switch_statuses)
 
     def _send(self, *message):
         msg = bytes(message)
-        try:
-            self.h.send_feature_report(msg)
-        except hid.HIDException:
-            raise DeviceNotConnected()
+        print('msg:', message, msg)
+        if platform == 'darwin':
+            try:
+                self.h.send_feature_report(msg)
+            except hid.HIDException:
+                raise DeviceNotConnected()
+        elif platform == 'win32':
+            report = self.wh.find_feature_reports()[0]
+            print('r', report)
+            report[0] = constants['single_on']
+            report.send()
+
+
 
     def get(self, relay_number):
         assert relay_number >= 1
         assert relay_number <= 8
         return self.status[relay_number - 1]
+
+    def settt(self, relay_number, state):
+        if platform == 'win32':
+            self.set_win(relay_number, state)
+        elif platform == 'darwin':
+            self.set_darwin(relay_number, state)
+
+    def set_win(self, relay_number, state):
+        report = self.wh.find_feature_reports()[0]
+
 
     def set(self, relay_number, state):
         assert relay_number >= 1
