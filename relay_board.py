@@ -39,8 +39,6 @@ class RelayArray():
             raise Exception
 
     def toggle(self, relay_number):
-        print("relay num", relay_number)
-        print(self.status)
         if self.status[relay_number - 1]:
             self.set(relay_number, NC)
         else:
