@@ -148,9 +148,9 @@ relay_table.pack()
 tk.Label(relay_table, text='Relay').grid(row=0, column=0, padx=4, pady=4)
 configure_labels_button = tk.Button(relay_table, text="Configure Labels", command=configure_labels)
 configure_labels_button.grid(row=0, column=1)
-tk.Label(relay_table, text='Time').grid(row=0, column=3, padx=4, pady=4)
-tk.Label(relay_table, text='NC').grid(row=0, column=4, padx=4, pady=4)
-tk.Label(relay_table, text='NO').grid(row=0, column=5, padx=4, pady=4)
+#tk.Label(relay_table, text='Time').grid(row=0, column=3, padx=4, pady=4)
+tk.Label(relay_table, text='NC').grid(row=0, column=3, padx=4, pady=4)
+tk.Label(relay_table, text='NO').grid(row=0, column=4, padx=4, pady=4)
 
 constants['button_color'] = configure_labels_button.cget("background")
 
@@ -169,17 +169,17 @@ for relay_num, row in zip(range(1, 9), range(1, 9)):
     # 3 Activate
     a_button = tk.Button(relay_table, command=create_activator(relay_num), bg=constants['green'])
     activate_buttons.append(a_button)
-    a_button.grid(row=row, column=3, padx=4, pady=4)
+    #a_button.grid(row=row, column=3, padx=4, pady=4)
 
-    # 4 NC
+    # 3 NC
     nc_button = tk.Button(relay_table, command=create_setter(relay_num, NC))
     nc_buttons.append(nc_button)
-    nc_button.grid(row=row, column=4, padx=4, pady=4)
+    nc_button.grid(row=row, column=3, padx=4, pady=4)
 
-    # 5 NO
+    # 4 NO
     no_button = tk.Button(relay_table, command=create_setter(relay_num, NO))
     no_buttons.append(no_button)
-    no_button.grid(row=row, column=5, padx=4, pady=4)
+    no_button.grid(row=row, column=4, padx=4, pady=4)
 
 
 
