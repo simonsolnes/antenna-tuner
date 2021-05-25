@@ -2,7 +2,7 @@ class NO: pass
 class NC: pass
 class DeviceNotConnected(Exception): pass
 
-class RelayArrayDummy():
+class RelayArray():
     def __init__(self):
         self.state = [False for i in range(8)]
 
