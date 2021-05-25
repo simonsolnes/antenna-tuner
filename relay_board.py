@@ -1,5 +1,5 @@
-from dae_RelayBoard import dae_RelayBoard_Common
-import dae_RelayBoard
+from dae_py_relay_controller.dae_RelayBoard import dae_RelayBoard_Common
+import dae_py_relay_controller.dae_RelayBoard as dae_RelayBoard
 class NO: pass
 class NC: pass
 class DeviceNotConnected(Exception): pass
