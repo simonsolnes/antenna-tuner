@@ -1,0 +1,1 @@
+C:/Users/Sander/AppData/Local/Microsoft/WindowsApps/PythonSoftwareFoundation.Python.3.9_qbz5n2kfra8p0/python.exe c:/Users/Sander/Documents/Simon/antenna-tuner/__main__.py
