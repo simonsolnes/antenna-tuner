@@ -162,7 +162,7 @@ for relay_num, row in zip(range(1, 9), range(1, 9)):
 
 relays = RelayArray()
 update_status()
-
+'''
 def openColorDialog():
     # display color dialog box
     color = colorDialog.show()
@@ -171,4 +171,5 @@ def openColorDialog():
         "R = " + str(color[0][0]) + " G = " + str(color[0][1]) + " B = " + str(color[0][2]))
 colorDialog = tkinter.colorchooser.Chooser(root)
 tk.Button(root, text='color', command=openColorDialog).pack()
+'''
 root.mainloop()
